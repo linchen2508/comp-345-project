@@ -19,9 +19,10 @@ public:
     int tID;
     string continentName;
     int continentID;
-    int playerID;
+    string player;
     int armyNum;
     bool connectedForeignContinent;
+    bool build_city;
 
 
     vector<int> adjacentTerritoryInMap;
@@ -29,13 +30,13 @@ public:
     vector<int> reachableForeignContinent;
 
     Territory();
-    Territory(string tName, string continentName, int tID, int continentID);
+    Territory(string tName, string continentName, int tID, int continentID,bool connectedForeignContient,string player,bool build_city,int armyNum);
 
     string getTName();
     int getTID();
     string getContinentName();
     int getContinentID();
-    int getPlayerID();
+    int getPlayer();
     int getArmyNum();
     bool getConnectedForeignContinent();
     vector<int> getAdjacentTerritoryInMap();
@@ -45,7 +46,13 @@ public:
     void setTID(int tID);
     void setConnectedForeignContinent(bool canGoOut);
     void printTerritoryVector(vector<int> v);
-
+    //For Part 3 Method
+    bool getBuildCity();
+    void setArmy(int armyNum);
+    void setBuildCity();
+    void setPlayer(string player);
+    void toString();// Temp for toString, need to modify late
+    
 };
 
 class Continent
