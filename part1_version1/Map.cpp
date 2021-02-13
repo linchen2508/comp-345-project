@@ -64,7 +64,31 @@ void Territory::printTerritoryVector(vector<int> v)
     }
 
 }
-
+/**********************/
+//For Part 3 Method
+bool getBuildCity(){
+    return build_city;
+}
+void setArmy(int armyNum){
+    this->armyNum += armyNum;
+}
+void setBuildCity(){
+    build_city = true;    
+}
+void setPlayer(string player){
+    this->player = player;
+}
+void toString(){
+    string temp;
+    if(build_city == 0){
+        temp = "No";
+    }else{
+        temp = "Yes";
+    }
+    cout <<"Territory Name: "<< tName <<" Player: "<< player <<" Build City: "<< temp <<" Army: "<< arryNum<< endl;
+}
+// Temp for toString, need to modify late
+/**********************/
 
 Continent::Continent()
 {
