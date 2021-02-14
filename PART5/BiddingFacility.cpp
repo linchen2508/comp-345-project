@@ -11,6 +11,20 @@ BiddingFacility::BiddingFacility(string a, int b, int c)
 	bid = c;
 }
 
+//Copy Construtor
+BiddingFacility::BiddingFacility(const BiddingFacility& object)
+{
+	this->name = object.name;
+	this->money = object.money;
+	this->bid = object.bid;
+}
+//Assignment Operator
+BiddingFacility& BiddingFacility::operator=(const BiddingFacility& object) {
+	this->name = object.name;
+	this->money = object.money;
+	this->bid = object.bid;
+	return *this;
+}
 
 void BiddingFacility::revealBid()
 {
