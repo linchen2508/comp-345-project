@@ -3,6 +3,7 @@
 #include <string>
 using namespace std;
 
+BiddingFacility::BiddingFacility() {}
 
 BiddingFacility::BiddingFacility(string a, int b, int c)
 {
