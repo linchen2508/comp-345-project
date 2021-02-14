@@ -86,7 +86,7 @@ ostream& operator<<(ostream& output, const Territory& object){
     }else{
         temp = "Yes";
     }
-    output <<"Territory Name: "<< object.tName <<" Player: "<< object.player <<" Build City: "<< object.temp <<" Army: "<< object.arryNum<< endl;
+   output << "Territory Name: " << object.tName << " Player: " << object.player << " Build City: " << temp << " Army: " << object.armyNum << endl;
     return output;
 }
 
