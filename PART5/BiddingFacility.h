@@ -18,6 +18,12 @@ public:
 
 	//Constructor with 3 parameters
 	BiddingFacility(string a, int b, int c);
+	
+	//Copy construcotr
+	BiddingFacility(const BiddingFacility& object);
+
+	//Assignment Operator
+	BiddingFacility& operator = (const BiddingFacility&);
 
 	//function to set the bid
 	void setBid();
