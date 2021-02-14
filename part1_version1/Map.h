@@ -51,7 +51,8 @@ public:
     void setArmy(int armyNum);
     void setBuildCity();
     void setPlayer(string player);
-    void toString();// Temp for toString, need to modify late
+    //Stream Insertion Operator
+    friend ostream& operator<<(ostream& output, const Territory& object);
     
 };
 
