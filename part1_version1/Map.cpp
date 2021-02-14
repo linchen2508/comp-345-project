@@ -64,7 +64,33 @@ void Territory::printTerritoryVector(vector<int> v)
     }
 
 }
+/**********************/
+//For Part 3 Method
+bool getBuildCity(){
+    return build_city;
+}
+void setArmy(int armyNum){
+    this->armyNum += armyNum;
+}
+void setBuildCity(){
+    build_city = true;    
+}
+void setPlayer(string player){
+    this->player = player;
+}
+//Stream Insertion Operator
+ostream& operator<<(ostream& output, const Territory& object){
+    string temp;
+    if(build_city == 0){
+        temp = "No";
+    }else{
+        temp = "Yes";
+    }
+   output << "Territory Name: " << object.tName << " Player: " << object.player << " Build City: " << temp << " Army: " << object.armyNum << endl;
+    return output;
+}
 
+/**********************/
 
 Continent::Continent()
 {
