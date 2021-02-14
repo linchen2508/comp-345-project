@@ -75,7 +75,7 @@ int main() {
         cout<<endl;
     }
     c0.territoryMemberInContinent.push_back(&t0);
-    c0.territoryMemberInContinent.push_back(&t1);
+    //c0.territoryMemberInContinent.push_back(&t1);
     c1.territoryMemberInContinent.push_back(&t2);
     c1.territoryMemberInContinent.push_back(&t3);// comment out any of these will break the continent subGraph
     c2.territoryMemberInContinent.push_back(&t4);
