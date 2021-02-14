@@ -78,16 +78,18 @@ void setBuildCity(){
 void setPlayer(string player){
     this->player = player;
 }
-void toString(){
+//Stream Insertion Operator
+ostream& operator<<(ostream& output, const Territory& object){
     string temp;
     if(build_city == 0){
         temp = "No";
     }else{
         temp = "Yes";
     }
-    cout <<"Territory Name: "<< tName <<" Player: "<< player <<" Build City: "<< temp <<" Army: "<< arryNum<< endl;
+    output <<"Territory Name: "<< object.tName <<" Player: "<< object.player <<" Build City: "<< object.temp <<" Army: "<< object.arryNum<< endl;
+    return output;
 }
-// Temp for toString, need to modify late
+
 /**********************/
 
 Continent::Continent()
