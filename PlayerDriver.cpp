@@ -1,6 +1,4 @@
 #include "Player.h";
-#include "Territory.h"
-#include "BiddingFacility.h"
 
 using namespace std;
 
