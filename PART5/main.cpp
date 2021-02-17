@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "BiddingFacility.cpp"
+#include "BiddingFacility.h"
 using namespace std;
 
 int main() 
