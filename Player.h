@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include "Territory.h"
+#include "Map.h"
 #include "Cards.h"
 #include "BiddingFacility.h"
 
