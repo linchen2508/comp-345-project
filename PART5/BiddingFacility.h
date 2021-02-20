@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <array>
+#include <vector>
 using namespace std;
 class BiddingFacility
 {
@@ -18,8 +19,8 @@ public:
 
 	//Constructor with 3 parameters
 	BiddingFacility(string a, int b, int c);
-	
-	//Copy construcotr
+
+	//Copy constructor
 	BiddingFacility(const BiddingFacility& object);
 
 	//Assignment Operator
@@ -35,6 +36,12 @@ public:
 	void revealBid();
 
 	//compare the bid to decide which player will go first
-	static void compareBid(BiddingFacility a[]);
-};
+	static void compareBid(vector<BiddingFacility*> a);
 
+	//Stream insertion operator
+	friend ostream& operator<<(ostream& output, const BiddingFacility& BF);
+
+	//Destructor
+	~BiddingFacility();
+
+};
