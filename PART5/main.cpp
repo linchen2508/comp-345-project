@@ -43,8 +43,12 @@ int main()
 	BiddingFacility::compareBid(testVector);
 
 	//Destructor will automatically be called after execution finish
-
-
+	
+	//Memory Leak Delete
+	for (int i = 0; i < testVector.size(); i++) {
+		delete testVector.at(i);
+		testVector[i] = nullptr;
+	}
 
 
 }
