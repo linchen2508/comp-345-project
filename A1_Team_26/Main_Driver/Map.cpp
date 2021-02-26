@@ -191,7 +191,7 @@ bool Continent::checkSubGraph()
             int len2 = visited.size();//get the length of visited list
             for (int k = 0; k < len2; k++) {//loop visited list
                 if (temp == visited[k]) {//if adjacent node id exist in visited list, goto next adjacent node
-                    return;
+                    break;
                 }
                 if (k == (len2 - 1)) {//if adjacent node not exist in visited list, add it into visited list
                     if (temp != visited[k]) {
@@ -281,7 +281,7 @@ void Map::validate()
         else {
             cout << "Map's Continent->" << this->allContinent[i]->getCName() << " is disconnected." << endl;
             cout << "Map is invalid because at least one Continent subgraph is not connected." << endl;
-            break;
+            return;
         }
     }
     for (int j = 0; j < len; j++) {
