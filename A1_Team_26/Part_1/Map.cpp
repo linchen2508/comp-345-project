@@ -281,7 +281,7 @@ void Map::validate()
         else {
             cout << "Map's Continent->" << this->allContinent[i]->getCName() << " is disconnected." << endl;
             cout << "Map is invalid because at least one Continent subgraph is not connected." << endl;
-            break;
+            return;
         }
     }
     for (int j = 0; j < len; j++) {
