@@ -130,6 +130,11 @@ void MapLoader::readMap()
             }
         }
         if(myText=="Adjacent status:"){
+		int len = worldMap->allTerritory.size();
+	    for (int i = 0; i < len; i++) {
+                worldMap->allContinent[worldMap->allTerritory[i]->getContinentID()]->territoryMemberInContinent.push_back(worldMap->allTerritory[i]);
+            }
+     
             adjacentFlag=true;
             continue;
         }
