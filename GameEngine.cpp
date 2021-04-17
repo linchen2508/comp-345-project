@@ -1,3 +1,4 @@
+GameEngine.cpp
 #include"GameEngine.h"
 
 GameEngine::GameEngine() {
@@ -25,7 +26,7 @@ void GameEngine::setMap() {
         cout << "Choose Number [1-2] : ";
         cin >> mapIndex;
         if (mapIndex == 1) {
-            this->wml->mapFile = "map.txt";
+            this->wml->mapFile = "/Users/Administrator/Desktop/2021winter/COMP 345 Project/A2_Team_26/Part_1_6/map.txt";
             chooseMap = true;
         }
         else if (mapIndex == 2) {
@@ -221,7 +222,7 @@ void GameEngine::gameloop() {
 
             players[i]->dealWithHand(players, wml);
 
-            players[i]->fitMap(players, wml);
+            //players[i]->fitMap(players, wml);
 
             numberOfCardEachPlayer++;
         }
@@ -232,27 +233,84 @@ void GameEngine::computeScord() {
     //cout << "Below is for part6 testing ..." << endl;
     auto* cs1 = new CardScord();
     auto* cs2 = new CardScord();
- 
+    
+    //Compute Card's Scord
     players[0]->loadCardMap(cs1);
-    cs1->printCS();
-    int s = 0;
-    s = players[0]->calCS(cs1);
-    cout << players[0]->getName() <<" get card total score: " << s << endl;
+    //cs1->printCS();
+    int s1 = 0;
+    s1 = players[0]->calCS(cs1);
+    //cout << players[0]->getName() <<" get card total score: " << s << endl;
     players[1]->loadCardMap(cs2);
-    cs2->printCS();
-    int ss = 0;
-    ss = players[1]->calCS(cs2);
-    cout << players[0]->getName()<<" get card total score: " << ss << endl;
+    //cs2->printCS();
+    int s2 = 0;
+    s2 = players[1]->calCS(cs2);
+    //cout << players[0]->getName()<<" get card total score: " << ss << endl;
 
     int p1s = 0;
     int p2s = 0;
 
+    //p1s += s1;
+    //p2s += s2;
 
-    p1s += players[0]->getTerritory().size();
-    p2s += players[1]->getTerritory().size();
+    //compute Territory Score For Player 1
+    int count = 0;
+    for (int i = 0; i < players[0]->getTerritory().size(); i++) {
+        if (players[0]->getTerritory()[i]->getArmyNum() > players[0]->getTerritory()[i]->getWhiteNum()) {
+            count++;
+        }
+    }
+    p1s += count;
+
+    //compute Territory Score For Player 2
+    count = 0;
+    for (int i = 0; i < players[1]->getTerritory().size(); i++) {
+        if (players[1]->getTerritory()[i]->getArmyNum() > players[1]->getTerritory()[i]->getWhiteNum()) {
+            count++;
+        }
+    }
+    p2s += count;
+
+    //compute Continent Score For Player 1
+    count = 0;
+    for (int i = 0; i < wml->worldMap->getNumOfAllContinent(); i++) {
+        count = 0;
+        for (int j = 0; j < wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent().size(); j++) {
+            if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() == players[0]->getName()) {
+                count++;
+            }
+            if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() != players[0]->getName() && wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer().length() != 0) {
+                count--;
+            }
+        }
+        if (count > 0) {
+            count++;
+        }
+    }
+    p1s += count*2;
+
+    //compute Continent Score For Player 2
+    count = 0;
+    for (int i = 0; i < wml->worldMap->getNumOfAllContinent(); i++) {
+        count = 0;
+        for (int j = 0; j < wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent().size(); j++) {
+            if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() == players[1]->getName()) {
+                count++;
+            }
+            if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() != players[1]->getName() && wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer().length() != 0) {
+                count--;
+            }
+        }
+        if (count > 0) {
+            count++;
+        }
+    }
+    p2s += count*2;
+
+    //Compute Card Score
     p1s += players[0]->calCS(cs1);
     p2s += players[1]->calCS(cs2);
 
+    //Compute Elixir Score
     if (cs1->cs["elixir"] != cs2->cs["elixir"]) {
         if (cs1->cs["elixir"] > cs2->cs["elixir"]) {
             p1s += 2;
@@ -261,6 +319,9 @@ void GameEngine::computeScord() {
             p2s += 2;
         }
     }
+
+    cout << players[0]->getName() <<" Victory Points: " << p1s << endl;
+    cout << players[1]->getName()<<" Victory Points: " << p2s << endl;
 
     if (p1s != p2s) {
         if (p1s > p2s) {
