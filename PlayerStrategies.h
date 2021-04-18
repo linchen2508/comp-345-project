@@ -14,7 +14,7 @@ public:
     virtual int doSth(Hand* hand);
 };
 
-class Context{
+class Context {
 public:
     Context(PlayerStrategies* str);
     ~Context();
@@ -25,12 +25,12 @@ private:
     PlayerStrategies* playerStrategies;
 };
 
-class GreedyPlayer:public PlayerStrategies{
+class GreedyPlayer :public PlayerStrategies {
 public:
     int doSth(Hand* hand);
 };
 
-class ModeratePlayer:public PlayerStrategies{
+class ModeratePlayer :public PlayerStrategies {
 public:
     int doSth(Hand* hand);
 };

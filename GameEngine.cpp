@@ -1,4 +1,5 @@
 #include"GameEngine.h"
+#include "PlayerStrategies.h"
 
 GameEngine::GameEngine() {
     vector<Player*> players;
@@ -25,7 +26,7 @@ void GameEngine::setMap() {
         cout << "Choose Number [1-2] : ";
         cin >> mapIndex;
         if (mapIndex == 1) {
-            this->wml->mapFile = "/Users/Administrator/Desktop/2021winter/COMP 345 Project/A2_Team_26/Part_1_6/map.txt";
+            this->wml->mapFile = "map.txt";
             chooseMap = true;
         }
         else if (mapIndex == 2) {
@@ -463,12 +464,124 @@ int GameEngine::getVictoryPoint(Player* object) {
 
     return point;
 }
+void GameEngine::gameLoopTournament() {
+    //variable to keep track how many card each player has drawn
+    int numberOfCardEachPlayer = 0;
+    int player1;
+    cout << "Enter 1 to make player 1 a human, 2 to make player 1 a greedy player, 3 to make player 1 a moderate player: \n";
+    cin >> player1;
+    int player2;
+    cout << "Enter 1 to make player 2 a human, 2 to make player 2 a greedy player, 3 to make player 2 a moderate player: \n";
+    cin >> player2;
+    while (numberOfCardEachPlayer < 12)
+    {
+        //Players will take turns doing actions
+        for (int i = 0; i < players.size(); i++)
+        {
+            cout << "\nThis is the turn of player  " << players[i]->getName() << endl;
+            cout << "\nFirst Card Costs << 0 coin >>, Second/Third Card Card Costs << 1 coin >>, Fourth/Fifth Card Costs << 2 coin >>, Sixth Card Costs << 3 coin >> \n" << endl;
+            cout << *hand << endl;
+            Context* context = new Context(new GreedyPlayer);
+            int res;
+            switch (player1) {
+            case 1: {
+                //if player 1 is a human
+                if (i == 0)
+                {
+                    cout << "Please enter the index of the card you wanna choose: ";
+                    cin >> res;
+
+                    while (res < 1 || res > 6)
+                    {
+                        cout << "Sorry the index you chose is not valid. Please enter a number from 1 to 6" << endl;
+                        cout << "Please enter the index of the card you wanna choose: ";
+                        cin >> res;
+                    }
+                }
+                break;
+            }
+            case 2: {
+                //if player 1 is a greedy player
+                if (i == 0)
+                {
+                    res = context->DoStrategy(hand);
+                }
+                break;
+            }
+            case 3: {
+                if (i == 0)
+                {
+                    //if player 1 is a moderate player
+                    context->set_Strategy(new ModeratePlayer);
+                    res = context->DoStrategy(hand);
+                }
+                break;
+            }
+
+            }
+            switch (player2) {
+            case 1: {
+                //if player 2 is a human
+                if (i == 1)
+                {
+                    cout << "Please enter the index of the card you wanna choose: ";
+                    cin >> res;
+
+                    while (res < 1 || res > 6)
+                    {
+                        cout << "Sorry the index you chose is not valid. Please enter a number from 1 to 6" << endl;
+                        cout << "Please enter the index of the card you wanna choose: ";
+                        cin >> res;
+                    }
+                }
+                break;
+            }
+            case 2: {
+                //if player 2 is a greedy player
+                if (i == 1)
+                {
+                    res = context->DoStrategy(hand);
+                }
+                break;
+            }
+            case 3: {
+                //if player 2 is a moderate player
+                if (i == 1)
+                {
+                    context->set_Strategy(new ModeratePlayer);
+                    res = context->DoStrategy(hand);
+                }
+                break;
+            }
+
+            }
+
+            //end of using strategy
+            //only need to replace chosenCardNumber with res, will auto draw card for player in diff bias
+
+           players[i]->setNum(res);
+
+            //the player choose the card, pay the coin then add it to his hand cards
+           hand->exchange(res, players[i]);
+
+            //add 1 more card to the hand to replace for the card that has been chosen
+           hand->setHand(playingDeck->draw());
+
+            //print out the player's info
+            //cout << *players[i];
+
+           players[i]->dealWithHand(players, wml);
+
+            numberOfCardEachPlayer++;
+        }
+    }
+}
 
 void GameEngine::gameLoopForDemo4() {
     //variable to keep track how many card each player has drawn
     int numberOfCardEachPlayer = 0;
 
-    //The game will end when each player has drawn 13 card
+    //The game will end when each player has drawn 4 card
     while (numberOfCardEachPlayer < 4)
     {
         //Players will take turns doing actions

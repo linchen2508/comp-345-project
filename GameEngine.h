@@ -31,7 +31,9 @@ public:
 	//Service Method
 	void gameloop();
 	void gameLoopForDemo4();
+	void gameLoopTournament();
 	void computeScord();
+
 	
 private:
 	vector<Player*> players;
