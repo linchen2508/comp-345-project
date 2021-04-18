@@ -201,6 +201,27 @@ void GameEngine::gameloop() {
         //Players will take turns doing actions
         for (int i = 0; i < players.size(); i++)
         {
+            //Get Player City/Territory/Destory information
+            int city_before = 0;
+            int territory_before = 0;
+            int army_before = 0;
+
+            for (int j = 0; j < players[i]->getTerritory().size(); j++) {
+                if (players[i]->getTerritory()[j]->getBuildCity() != 0) {
+                    city_before++;
+                }
+                if (players[i]->getTerritory()[j]->getArmyNum() > players[i]->getTerritory()[j]->getWhiteNum()) {
+                    territory_before++;
+                }
+            }
+            int temp = (i + 1) % 2;
+
+            //Get Another Player Army Num
+            for (int j = 0; j < players[temp]->getTerritory().size(); j++) {
+                army_before += players[temp]->getTerritory()[j]->getArmyNum();
+       
+            }
+            
             cout << "\nThis is the turn of player  " << players[i]->getName() << endl;
             cout << "\nFirst Card Costs << 0 coin >>, Second/Third Card Card Costs << 1 coin >>, Fourth/Fifth Card Costs << 2 coin >>, Sixth Card Costs << 3 coin >> \n" << endl;
             cout << *hand << endl;
@@ -227,23 +248,36 @@ void GameEngine::gameloop() {
 
             players[i]->dealWithHand(players, wml);
             
+             //Get Player City/Territory/Destory information
+            int city_after = 0;
+            int territory_after = 0;
+            int army_after = 0;
+            for (int j = 0; j < players[i]->getTerritory().size(); j++) {
+                if (players[i]->getTerritory()[j]->getBuildCity() != 0) {
+                    city_after++;
+                }
+                if (players[i]->getTerritory()[j]->getArmyNum() > players[i]->getTerritory()[j]->getWhiteNum()) {
+                    territory_after++;
+                }
+            }
+            //Get Another Player Army Num
+            for (int j = 0; j < players[(i + 1) % 2]->getTerritory().size(); j++) {
+                army_after += players[(i + 1) % 2]->getTerritory()[j]->getArmyNum();
+
+            }
             //Static Observer
             //Move Army Or Buid City
-            if (players[i]->getChange() == 2 ) {
-                    num = 2;
-                    playerIndex = i;
-                    Notify();
-            }
-            //Destory By Player
-            if (players[i]->getChange() == 1) {
-                num = 3;
+            if (city_before != city_after || territory_before != territory_after) {
+                num = 2;
                 playerIndex = i;
-                //playerIndex = abs(i - 1);
                 Notify();
             }
-            //Reset observer target
-            players[i]->setChange(0);
-
+            if (army_before != army_after) {
+                num = 3;
+                playerIndex = i;
+                Notify();
+            }
+            
             numberOfCardEachPlayer++;
         }
     }
@@ -478,6 +512,27 @@ void GameEngine::gameLoopTournament() {
         //Players will take turns doing actions
         for (int i = 0; i < players.size(); i++)
         {
+            //Get Player City/Territory/Destory information
+            int city_before = 0;
+            int territory_before = 0;
+            int army_before = 0;
+
+            for (int j = 0; j < players[i]->getTerritory().size(); j++) {
+                if (players[i]->getTerritory()[j]->getBuildCity() != 0) {
+                    city_before++;
+                }
+                if (players[i]->getTerritory()[j]->getArmyNum() > players[i]->getTerritory()[j]->getWhiteNum()) {
+                    territory_before++;
+                }
+            }
+            int temp = (i + 1) % 2;
+
+            //Get Another Player Army Num
+            for (int j = 0; j < players[temp]->getTerritory().size(); j++) {
+                army_before += players[temp]->getTerritory()[j]->getArmyNum();
+       
+            }
+            
             cout << "\nThis is the turn of player  " << players[i]->getName() << endl;
             cout << "\nFirst Card Costs << 0 coin >>, Second/Third Card Card Costs << 1 coin >>, Fourth/Fifth Card Costs << 2 coin >>, Sixth Card Costs << 3 coin >> \n" << endl;
             cout << *hand << endl;
@@ -571,6 +626,36 @@ void GameEngine::gameLoopTournament() {
             //cout << *players[i];
 
            players[i]->dealWithHand(players, wml);
+            
+            //Get Player City/Territory/Destory information
+            int city_after = 0;
+            int territory_after = 0;
+            int army_after = 0;
+            for (int j = 0; j < players[i]->getTerritory().size(); j++) {
+                if (players[i]->getTerritory()[j]->getBuildCity() != 0) {
+                    city_after++;
+                }
+                if (players[i]->getTerritory()[j]->getArmyNum() > players[i]->getTerritory()[j]->getWhiteNum()) {
+                    territory_after++;
+                }
+            }
+            //Get Another Player Army Num
+            for (int j = 0; j < players[(i + 1) % 2]->getTerritory().size(); j++) {
+                army_after += players[(i + 1) % 2]->getTerritory()[j]->getArmyNum();
+
+            }
+            //Static Observer
+            //Move Army Or Buid City
+            if (city_before != city_after || territory_before != territory_after) {
+                num = 2;
+                playerIndex = i;
+                Notify();
+            }
+            if (army_before != army_after) {
+                num = 3;
+                playerIndex = i;
+                Notify();
+            }
 
             numberOfCardEachPlayer++;
         }
@@ -587,6 +672,27 @@ void GameEngine::gameLoopForDemo4() {
         //Players will take turns doing actions
         for (int i = 0; i < players.size(); i++)
         {
+            //Get Player City/Territory/Destory information
+            int city_before = 0;
+            int territory_before = 0;
+            int army_before = 0;
+
+            for (int j = 0; j < players[i]->getTerritory().size(); j++) {
+                if (players[i]->getTerritory()[j]->getBuildCity() != 0) {
+                    city_before++;
+                }
+                if (players[i]->getTerritory()[j]->getArmyNum() > players[i]->getTerritory()[j]->getWhiteNum()) {
+                    territory_before++;
+                }
+            }
+            int temp = (i + 1) % 2;
+
+            //Get Another Player Army Num
+            for (int j = 0; j < players[temp]->getTerritory().size(); j++) {
+                army_before += players[temp]->getTerritory()[j]->getArmyNum();
+       
+            }
+            
             cout << "\nThis is the turn of player  " << players[i]->getName() << endl;
             cout << "\nFirst Card Costs << 0 coin >>, Second/Third Card Card Costs << 1 coin >>, Fourth/Fifth Card Costs << 2 coin >>, Sixth Card Costs << 3 coin >> \n" << endl;
             cout << *hand << endl;
@@ -614,22 +720,36 @@ void GameEngine::gameLoopForDemo4() {
 
             players[i]->dealWithHand(players, wml);
 
+            //Get Player City/Territory/Destory information
+            int city_after = 0;
+            int territory_after = 0;
+            int army_after = 0;
+            for (int j = 0; j < players[i]->getTerritory().size(); j++) {
+                if (players[i]->getTerritory()[j]->getBuildCity() != 0) {
+                    city_after++;
+                }
+                if (players[i]->getTerritory()[j]->getArmyNum() > players[i]->getTerritory()[j]->getWhiteNum()) {
+                    territory_after++;
+                }
+            }
+            //Get Another Player Army Num
+            for (int j = 0; j < players[(i + 1) % 2]->getTerritory().size(); j++) {
+                army_after += players[(i + 1) % 2]->getTerritory()[j]->getArmyNum();
+
+            }
             //Static Observer
             //Move Army Or Buid City
-            if (players[i]->getChange() == 1) {
+            if (city_before != city_after || territory_before != territory_after) {
                 num = 2;
                 playerIndex = i;
                 Notify();
             }
-            //Destory By Player
-            if (players[i]->getChange() == 2) {
+            if (army_before != army_after) {
                 num = 3;
                 playerIndex = i;
-                //playerIndex = abs(i - 1);
                 Notify();
             }
-            //Reset observer target
-            players[i]->setChange(0);
+            
             numberOfCardEachPlayer++;
         }
     }
