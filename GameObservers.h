@@ -3,8 +3,11 @@
 #include <list>
 
 class ActionObserver;
+class StatisticsObserver;
 class Player;
+class GameEngine;
 
+//Player Subject
 class PlayerSubject {
 public:
 	virtual void Attach(ActionObserver* o);
@@ -16,6 +19,17 @@ private:
 	list<ActionObserver*> *_observers;
 };
 
+//Game Subject
+class GameSubject {
+public:
+	virtual void Attach(StatisticsObserver* o);
+	virtual void Detach(StatisticsObserver* o);
+	virtual void Notify();
+	GameSubject();
+	~GameSubject();
+private:
+	list<StatisticsObserver*> *_observers;
+};
 
 class GameObserver {
 public:
@@ -25,7 +39,6 @@ protected:
 	GameObserver();
 };
 
-
 class ActionObserver : public GameObserver{
 public:
 	ActionObserver(Player* s);
@@ -34,4 +47,14 @@ public:
 	void display();
 private:
 	Player* _subject;
+};
+
+class StatisticsObserver : public GameObserver {
+public:
+	StatisticsObserver(GameEngine* s);
+	~StatisticsObserver();
+	void Update();
+	void display();
+private:
+	GameEngine* _subject;
 };

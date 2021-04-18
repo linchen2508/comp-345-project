@@ -26,6 +26,7 @@ public:
     /*******************/
 
     string getMapFile();
+    Map* getMap() { return worldMap; };
     void setMapFile(const string& mf);
     vector<string> tokenizeString(const string& s);
     void readMap();

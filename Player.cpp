@@ -122,7 +122,8 @@ int Player::BuildCity(Territory* territory) {
 	//A3 Action Observer
 	this->active = 4;
 	Notify();
-
+	//A3 statistics observer
+	this->change = 1;
 	return 1;
 }
 
@@ -137,18 +138,12 @@ int Player::PlaceNewArmies(Territory* A, int army) {
 		setArmy(3);
 		A->setBuildCity();
 		this->territory.push_back(A);
-		//A3
-		//active = 1;
-		//Notify();
-
-		//cout << "Placement success" << endl;
 	}
 
 	//if the territory exist a city --> true 
 	else if (A->getBuildCity() == true) {
 
 		//place the army to the territory 
-
 		A->setArmy(army);
 		setArmy(army);
 
@@ -182,6 +177,8 @@ int Player::MoveArmies(Territory* A, Territory* B, int army) {
 		//A3 Action Observer
 		this->active = 2;
 		Notify();
+		//A3 statistics observer
+		this->change = 1;
 
 		cout << "Mobile success" << endl;
 	}
@@ -197,7 +194,8 @@ int Player::MoveArmies(Territory* A, Territory* B, int army) {
 		//A3 Action Observer
 		this->active = 2;
 		Notify();
-
+		//A3 statistics observer
+		this->change = 1;
 		cout << "Mobile success" << endl;
 	}
 
@@ -242,7 +240,8 @@ int Player::MoveOverLand(Territory* A, Territory* B, int army) {
 				//A3 Action Observer
 				this->active = 2;
 				Notify();
-
+				//A3 statistics observer
+				this->change = 1;
 				return 1;
 			}
 
@@ -260,6 +259,8 @@ int Player::MoveOverLand(Territory* A, Territory* B, int army) {
 				//A3 Action Observer
 				this->active = 2;
 				Notify();
+				//A3 statistics observer
+				this->change = 1;
 
 				return 1;
 			}
@@ -283,12 +284,13 @@ int Player::MoveOverLand(Territory* A, Territory* B, int army) {
 //method to destory army 
 int Player::DestroyArmy(Territory* territory, int num) {
 	territory->setArmy(-num);
-	cout << "Successful destruction" << endl;
-
+	
 	//A3 Action Observer
 	this->active = 5;
 	Notify();
-
+	//A3 statistics observer
+	this->change = 2;
+	cout << "Successful destruction" << endl;
 	return 1;
 }
 

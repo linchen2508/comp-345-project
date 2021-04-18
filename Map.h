@@ -58,6 +58,7 @@ public:
     int getContinentID();
     string getPlayer();
     int getArmyNum();
+    //int getWhiteNum() { return whiteNum; };
     bool getConnectedForeignContinent();
     vector<int> getAdjacentTerritoryInMap();
     vector<int> getAdjacentTerritoryInSameContinent();
@@ -148,6 +149,7 @@ public:
     int getNumOfAllTerritory();
     int getNumOfAllContinent();
     vector<Territory*> getAllTerritory();
+    vector<Continent*> getAllContinent() { return allContinent; };
     void setMapName(string mName);
     void printAllTerritory();
     void printAllContinent();

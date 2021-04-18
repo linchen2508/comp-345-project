@@ -1,4 +1,4 @@
-﻿
+﻿#include"GameEngine.h"
 #include "Player.h"
 #include <iostream>
 #include <list>
@@ -25,6 +25,24 @@ void PlayerSubject::Notify() {
         (*i)->Update();
 };
 
+//***** Game Subject Class *****//
+GameSubject::GameSubject() {
+    _observers = new list<StatisticsObserver*>;
+};
+GameSubject::~GameSubject() {
+    delete _observers;
+};
+void GameSubject::Attach(StatisticsObserver* o) {
+    _observers->push_back(o);
+};
+void GameSubject::Detach(StatisticsObserver* o) {
+    _observers->remove(o);
+};
+void GameSubject::Notify() {
+    list<StatisticsObserver*>::iterator i = _observers->begin();
+    for (; i != _observers->end(); ++i)
+        (*i)->Update();
+};
 
 //***** Obeservers Class *****//
 GameObserver::GameObserver() {
@@ -49,6 +67,7 @@ void ActionObserver::display() {
     int action = _subject->getActive();
     int num = _subject->getNum();
 
+    cout << "\n******** Phase Observer ********\n";
     switch (action) {
     case 1: {
         cout << "Player - " << _subject->getName() << " Action: << Place New Armies >>. Current Armies Number : " << _subject->getArmy() << endl;
@@ -122,4 +141,208 @@ void ActionObserver::display() {
     }
         break;
     }
+};
+
+//***** Statistics Obeservers Class *****//
+StatisticsObserver::StatisticsObserver(GameEngine* s) {
+    _subject = s;
+    _subject->Attach(this);
+};
+StatisticsObserver::~StatisticsObserver() {
+    _subject->Detach(this);
+};
+void StatisticsObserver::Update() {
+    display();
+};
+void StatisticsObserver::display() {
+   int num = _subject->getNum();
+   int playerIndex = _subject->getPlayerIndex();
+
+   cout << "\n******** Statistics Observer ********\n";
+
+   switch (num) {
+
+   case 1: {
+       cout << *_subject->getMapLoader()->worldMap << endl;
+   }
+    break;
+
+   case 2: {
+
+       int vp = _subject->getVictoryPoint(_subject->getPlayerVector()[playerIndex]);
+       int c = _subject->getPlayerContinentNum(_subject->getPlayerVector()[playerIndex]);
+
+       cout << "Player " << _subject->getPlayerVector()[playerIndex]->getName();
+       //print Victory Points
+       cout << "\nVictory Points < " << vp << " > : ";
+       for (int i = 0; i < vp; i++) {
+           cout << "#";
+       }
+       //print Regions
+       cout << "   Current Regions < ";
+       int temp = 0;
+       for (int i = 0; i < _subject->getPlayerVector()[playerIndex]->getTerritory().size(); i++) {
+           if (_subject->getPlayerVector()[playerIndex]->getTerritory()[i]->getArmyNum() > _subject->getPlayerVector()[playerIndex]->getTerritory()[i]->getWhiteNum()) {
+               temp++;
+               cout << _subject->getPlayerVector()[playerIndex]->getTerritory()[i]->getTName() << " ";
+           }
+       }
+       if (temp == 0) cout << "None";
+       cout << " > : ";
+       for (int i = 0; i < temp; i++) {
+           cout << "#";
+       }
+       //print Citys
+       cout << "\nCurrent City < ";
+       temp = 0;
+       for (int i = 0; i < _subject->getPlayerVector()[playerIndex]->getTerritory().size(); i++) {
+           if (_subject->getPlayerVector()[playerIndex]->getTerritory()[i]->getBuildCity() != 0) {
+               temp++;
+               cout << _subject->getPlayerVector()[playerIndex]->getTerritory()[i]->getTName() << " ";
+           }
+       }
+       if (temp == 0) cout << "None";
+       cout << " > : ";
+       for (int i = 0; i < temp; i++) {
+           cout << "#";
+       }
+       //print Continent
+       cout << "   Current Continent < ";
+       if (_subject->getPlayerContinent(_subject->getPlayerVector()[playerIndex]).length() == 0) {
+           cout << "None";
+       }
+       else { 
+           cout << _subject->getPlayerContinent(_subject->getPlayerVector()[playerIndex]); 
+       }
+       cout << " > : ";
+       temp = _subject->getPlayerContinentNum(_subject->getPlayerVector()[playerIndex]);
+       for (int i = 0; i < temp; i++) {
+           cout << "#";
+       }
+       cout << endl;
+     }
+         break;
+
+   case 3: {
+       
+       int index = abs(playerIndex - 1);
+       int vp = _subject->getVictoryPoint(_subject->getPlayerVector()[index]);
+       int c = _subject->getPlayerContinentNum(_subject->getPlayerVector()[index]);
+
+       cout << "Player " << _subject->getPlayerVector()[playerIndex]->getName() <<" Has been Destory Armies.";
+       //print Victory Points
+       cout << "\nVictory Points < " << vp << " > : ";
+       for (int i = 0; i < vp; i++) {
+           cout << "#";
+       }
+       //print Regions
+       cout << "   Current Regions < ";
+       int temp = 0;
+       for (int i = 0; i < _subject->getPlayerVector()[index]->getTerritory().size(); i++) {
+           if (_subject->getPlayerVector()[index]->getTerritory()[i]->getArmyNum() > _subject->getPlayerVector()[index]->getTerritory()[i]->getWhiteNum()) {
+               temp++;
+               cout << _subject->getPlayerVector()[index]->getTerritory()[i]->getTName() << " ";
+           }
+       }
+       if (temp == 0) cout << "None";
+       cout << " > : ";
+       for (int i = 0; i < temp; i++) {
+           cout << "#";
+       }
+       //print Citys
+       cout << "\nCurrent City < ";
+       temp = 0;
+       for (int i = 0; i < _subject->getPlayerVector()[index]->getTerritory().size(); i++) {
+           if (_subject->getPlayerVector()[index]->getTerritory()[i]->getBuildCity() != 0) {
+               temp++;
+               cout << _subject->getPlayerVector()[index]->getTerritory()[i]->getTName() << " ";
+           }
+       }
+       if (temp == 0) cout << "None";
+       cout << " > : ";
+       for (int i = 0; i < temp; i++) {
+           cout << "#";
+       }
+       //print Continent
+       cout << "   Current Continent < ";
+       if (_subject->getPlayerContinent(_subject->getPlayerVector()[index]).length() == 0) {
+           cout << "None";
+       }
+       else {
+           cout << _subject->getPlayerContinent(_subject->getPlayerVector()[index]);
+       }
+       cout << " > : ";
+       temp = _subject->getPlayerContinentNum(_subject->getPlayerVector()[index]);
+       for (int i = 0; i < temp; i++) {
+           cout << "#";
+       }
+       cout << endl;
+   }
+         break;
+
+   case 4: {
+       cout << "\n\n******** Who is Winner? ********\n\n";
+
+       for (int i = 0; i < 2; i++) {
+
+           playerIndex = i;
+
+           int vp = _subject->getVictoryPoint(_subject->getPlayerVector()[playerIndex]);
+           int c = _subject->getPlayerContinentNum(_subject->getPlayerVector()[playerIndex]);
+
+           cout << "Player " << _subject->getPlayerVector()[playerIndex]->getName();
+           //print Victory Points
+           cout << "\nVictory Points < " << vp << " > : ";
+           for (int i = 0; i < vp; i++) {
+               cout << "#";
+           }
+           //print Regions
+           cout << "   Current Regions < ";
+           int temp = 0;
+           for (int i = 0; i < _subject->getPlayerVector()[playerIndex]->getTerritory().size(); i++) {
+               if (_subject->getPlayerVector()[playerIndex]->getTerritory()[i]->getArmyNum() > _subject->getPlayerVector()[playerIndex]->getTerritory()[i]->getWhiteNum()) {
+                   temp++;
+                   cout << _subject->getPlayerVector()[playerIndex]->getTerritory()[i]->getTName() << " ";
+               }
+           }
+           if (temp == 0) cout << "None";
+           cout << " > : ";
+           for (int i = 0; i < temp; i++) {
+               cout << "#";
+           }
+           //print Citys
+           cout << "\nCurrent City < ";
+           temp = 0;
+           for (int i = 0; i < _subject->getPlayerVector()[playerIndex]->getTerritory().size(); i++) {
+               if (_subject->getPlayerVector()[playerIndex]->getTerritory()[i]->getBuildCity() != 0) {
+                   temp++;
+                   cout << _subject->getPlayerVector()[playerIndex]->getTerritory()[i]->getTName() << " ";
+               }
+           }
+           if (temp == 0) cout << "None";
+           cout << " > : ";
+           for (int i = 0; i < temp; i++) {
+               cout << "#";
+           }
+           //print Continent
+           cout << "   Current Continent < ";
+           if (_subject->getPlayerContinent(_subject->getPlayerVector()[playerIndex]).length() == 0) {
+               cout << "None";
+           }
+           else {
+               cout << _subject->getPlayerContinent(_subject->getPlayerVector()[playerIndex]);
+           }
+           cout << " > : ";
+           temp = _subject->getPlayerContinentNum(_subject->getPlayerVector()[playerIndex]);
+           for (int i = 0; i < temp; i++) {
+               cout << "#";
+           }
+           cout << endl;
+       }
+       _subject->computeScord();
+
+       cout << "\n******** End of Game ********\n";
+   }
+         break;
+   };
 };

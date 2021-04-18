@@ -1,4 +1,3 @@
-
 #include"GameEngine.h"
 
 GameEngine::GameEngine() {
@@ -33,9 +32,7 @@ void GameEngine::setMap() {
             this->wml->mapFile = "map1.txt";
             chooseMap = true;
         }
-
     }
-
     //cout << this->wml->getMapFile() << endl;
     this->wml->readMap();
 
@@ -44,6 +41,9 @@ void GameEngine::setMap() {
         cout<< "Invalid Map. Exit!";
         exit(0);
     }
+    cout << "---- Map Information ---" << endl;
+    num = 1;
+    Notify();
 }
 
 
@@ -96,12 +96,13 @@ void GameEngine::setStartRegoin() {
     cout << "\n********** For Placing the Starting Regoin  ************\n";
     for (int i = 0; i < players.size(); i++) {
         //Displaying Territory
-        for (int i = 0; i < wml->worldMap->getAllTerritory().size(); i++) {
+        /*for (int i = 0; i < wml->worldMap->getAllTerritory().size(); i++) {
             cout << i + 1 << " -- "<< *wml->worldMap->getAllTerritory()[i]<< endl;
-        }
+        }*/
         int temp;
-        cout << "Player " << i + 1 << " :\n";
-        cout << "Enter The index of Territory , you want to set as the starting regoin: ";
+        cout << "There are " << wml->worldMap->getAllTerritory().size() << " Number of Territory in the Game." << endl;
+        cout << "Player " << players[i]->getName() << " - ";
+        cout << "Enter the Number between 1 to "<< wml->worldMap->getAllTerritory().size() <<" , you want to set as the starting regoin: ";
         cin >> temp;
 
         while (!(temp > 0 && temp < wml->worldMap->getAllTerritory().size() && wml->worldMap->getAllTerritory()[temp-1]->getPlayer().length() == 0 ))
@@ -111,6 +112,8 @@ void GameEngine::setStartRegoin() {
         }
         players[i]->PlaceNewArmies(wml->worldMap->getAllTerritory()[temp-1], 4);
         //cout << *players[i]<<endl;
+        num = 1;
+        Notify();
     }
 }
 
@@ -118,15 +121,16 @@ void GameEngine::setStartRegoin() {
 void GameEngine::setNonPlayerArmy() {
     //Loop For Placing non-player Army
     int whiteNum = 0;
-    cout << "\n********** For Placing non-player Army  ************\n";
+    cout << "\n********** For Placing Ten non-player Army  ************\n";
     while (whiteNum < 9) {
         for (int i = 0; i < players.size(); i++) {
             int temp;
-            for (int i = 0; i < wml->worldMap->getAllTerritory().size(); i++) {
+            /*for (int i = 0; i < wml->worldMap->getAllTerritory().size(); i++) {
                 cout << i + 1 << " - " << *wml->worldMap->getAllTerritory()[i] << endl;
-            }
-            cout << "Player " << players[i]->getName() << " :\n";
-            cout << "Enter The index of Territory , you want to put Non-Player Army: ";
+            }*/
+            cout << "There are " << wml->worldMap->getAllTerritory().size() << " Number of Territory in the Game." << endl;
+            cout << "Player " << players[i]->getName() << " - ";
+            cout << "Enter the Number between 1 to " << wml->worldMap->getAllTerritory().size() << " you want to put Non-Player Army: ";
             cin >> temp;
             while (temp <= 0 || temp > wml->worldMap->getAllTerritory().size()) {
                 cout << "Invalied Input. Please try again: ";
@@ -134,6 +138,8 @@ void GameEngine::setNonPlayerArmy() {
             }
             wml->worldMap->getAllTerritory()[temp - 1]->setWhiteNum(1);
             whiteNum++;
+            num = 1;
+            Notify();
         }
     }
 }
@@ -209,6 +215,7 @@ void GameEngine::gameloop() {
                 cin >> chosenCardNumber;
             }
 
+            //For A3 - Action Observer
             players[i]->setNum(chosenCardNumber);
 
             //the player choose the card, pay the coin then add it to his hand cards
@@ -217,40 +224,45 @@ void GameEngine::gameloop() {
             //add 1 more card to the hand to replace for the card that has been chosen
             hand->setHand(playingDeck->draw());
 
-            //print out the player's info
-            //cout << *players[i];
-
             players[i]->dealWithHand(players, wml);
-
-            //players[i]->fitMap(players, wml);
+            
+            //Static Observer
+            //Move Army Or Buid City
+            if (players[i]->getChange() == 2 ) {
+                    num = 2;
+                    playerIndex = i;
+                    Notify();
+            }
+            //Destory By Player
+            if (players[i]->getChange() == 1) {
+                num = 3;
+                playerIndex = i;
+                //playerIndex = abs(i - 1);
+                Notify();
+            }
+            //Reset observer target
+            players[i]->setChange(0);
 
             numberOfCardEachPlayer++;
         }
     }
+    //Static Observer 
+    //End Game
+    num = 4;
+    Notify();
 }
 
 void GameEngine::computeScord() {
     //cout << "Below is for part6 testing ..." << endl;
     auto* cs1 = new CardScord();
     auto* cs2 = new CardScord();
-    
+
     //Compute Card's Scord
     players[0]->loadCardMap(cs1);
-    //cs1->printCS();
-    int s1 = 0;
-    s1 = players[0]->calCS(cs1);
-    //cout << players[0]->getName() <<" get card total score: " << s << endl;
     players[1]->loadCardMap(cs2);
-    //cs2->printCS();
-    int s2 = 0;
-    s2 = players[1]->calCS(cs2);
-    //cout << players[0]->getName()<<" get card total score: " << ss << endl;
-
+    
     int p1s = 0;
     int p2s = 0;
-
-    //p1s += s1;
-    //p2s += s2;
 
     //compute Territory Score For Player 1
     int count = 0;
@@ -272,39 +284,40 @@ void GameEngine::computeScord() {
 
     //compute Continent Score For Player 1
     count = 0;
+    int temp = 0;
     for (int i = 0; i < wml->worldMap->getNumOfAllContinent(); i++) {
-        count = 0;
+        temp = 0;
         for (int j = 0; j < wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent().size(); j++) {
             if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() == players[0]->getName()) {
-                count++;
+                temp++;
             }
             if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() != players[0]->getName() && wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer().length() != 0) {
-                count--;
+                temp--;
             }
         }
-        if (count > 0) {
+        if (temp > 0) {
             count++;
         }
     }
-    p1s += count*2;
+    p1s += count * 2;
 
     //compute Continent Score For Player 2
     count = 0;
     for (int i = 0; i < wml->worldMap->getNumOfAllContinent(); i++) {
-        count = 0;
+        temp = 0;
         for (int j = 0; j < wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent().size(); j++) {
             if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() == players[1]->getName()) {
-                count++;
+                temp++;
             }
             if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() != players[1]->getName() && wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer().length() != 0) {
-                count--;
+                temp--;
             }
         }
-        if (count > 0) {
+        if (temp > 0) {
             count++;
         }
     }
-    p2s += count*2;
+    p2s += count * 2;
 
     //Compute Card Score
     p1s += players[0]->calCS(cs1);
@@ -320,8 +333,8 @@ void GameEngine::computeScord() {
         }
     }
 
-    cout << players[0]->getName() <<" Victory Points: " << p1s << endl;
-    cout << players[1]->getName()<<" Victory Points: " << p2s << endl;
+    cout << players[0]->getName() << " Victory Points: " << p1s << endl;
+    cout << players[1]->getName() << " Victory Points: " << p2s << endl;
 
     if (p1s != p2s) {
         if (p1s > p2s) {
@@ -366,4 +379,149 @@ void GameEngine::computeScord() {
 
     cout << "Tow players are even, Game is over." << endl;
 
+}
+
+string GameEngine::getPlayerContinent(Player* object) {
+    string temp = "";
+    int count = 0;
+    for (int i = 0; i < wml->worldMap->getNumOfAllContinent(); i++) {
+        count = 0;
+        for (int j = 0; j < wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent().size(); j++) {
+            if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() == object->getName()) {
+                count++;
+            }
+            if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() != object->getName() && wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer().length() != 0) {
+                count--;
+            }
+        }
+        if (count > 0) {
+            temp += wml->worldMap->getAllContinent()[i]->getCName() + " ";
+           
+        }
+    }
+    return temp;
+}
+
+int GameEngine::getPlayerContinentNum(Player* object) {
+    int count = 0;
+    int time = 0;
+    for (int i = 0; i < wml->worldMap->getNumOfAllContinent(); i++) {
+        count = 0;
+        for (int j = 0; j < wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent().size(); j++) {
+            if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() == object->getName()) {
+                count++;
+            }
+            if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() != object->getName() && wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer().length() != 0) {
+                count--;
+            }
+        }
+        if (count > 0) {
+            time++;
+        }
+    }
+    return time;
+}
+
+int GameEngine::getVictoryPoint(Player* object) {
+
+    int point = 0;
+    auto* cs1 = new CardScord();
+
+    //Compute Card's Scord
+    object->loadCardMap(cs1);
+    //Compute Card Score
+    point += object->calCS(cs1);
+    
+    //compute Territory Score For Player 
+    int count = 0;
+    for (int i = 0; i < object->getTerritory().size(); i++) {
+        if (object->getTerritory()[i]->getArmyNum() > object->getTerritory()[i]->getWhiteNum()) {
+            count++;
+        }
+    }
+    point += count;
+
+    //compute Continent Score For Player 
+    count = 0;
+    int temp;
+    for (int i = 0; i < wml->worldMap->getNumOfAllContinent(); i++) {
+        temp = 0;
+        //Loop For Each Continent
+        for (int j = 0; j < wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent().size(); j++) {
+            if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() == object->getName()) {
+                temp++;
+            }
+            if (wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer() != object->getName() && wml->worldMap->getAllContinent()[i]->getTerritoryMemberInContinent()[j]->getPlayer().length() != 0) {
+                temp--;
+            }
+        }
+        if (temp > 0) {
+            count++;
+        }
+    }
+    point += count * 2;
+
+    return point;
+}
+
+void GameEngine::gameLoopForDemo4() {
+    //variable to keep track how many card each player has drawn
+    int numberOfCardEachPlayer = 0;
+
+    //The game will end when each player has drawn 13 card
+    while (numberOfCardEachPlayer < 4)
+    {
+        //Players will take turns doing actions
+        for (int i = 0; i < players.size(); i++)
+        {
+            cout << "\nThis is the turn of player  " << players[i]->getName() << endl;
+            cout << "\nFirst Card Costs << 0 coin >>, Second/Third Card Card Costs << 1 coin >>, Fourth/Fifth Card Costs << 2 coin >>, Sixth Card Costs << 3 coin >> \n" << endl;
+            cout << *hand << endl;
+            //index of the card the player choose
+            int chosenCardNumber;
+            cout << "Please enter the index of the card you wanna choose: ";
+            cin >> chosenCardNumber;
+
+            while (chosenCardNumber < 1 || chosenCardNumber > 6)
+            {
+                cout << "Sorry the index you chose is not valid. Please enter a number from 1 to 6" << endl;
+                cout << "Please enter the index of the card you wanna choose: ";
+                cin >> chosenCardNumber;
+            }
+
+            //For A3 - Action Observer
+            players[i]->setNum(chosenCardNumber);
+
+            //the player choose the card, pay the coin then add it to his hand cards
+            hand->exchange(chosenCardNumber, players[i]);
+
+            //add 1 more card to the hand to replace for the card that has been chosen
+            hand->setHand(playingDeck->draw());
+
+
+            players[i]->dealWithHand(players, wml);
+
+            //Static Observer
+            //Move Army Or Buid City
+            if (players[i]->getChange() == 1) {
+                num = 2;
+                playerIndex = i;
+                Notify();
+            }
+            //Destory By Player
+            if (players[i]->getChange() == 2) {
+                num = 3;
+                playerIndex = i;
+                //playerIndex = abs(i - 1);
+                Notify();
+            }
+            //Reset observer target
+            players[i]->setChange(0);
+            numberOfCardEachPlayer++;
+        }
+    }
+    //Static Observer 
+    //End Game
+    num = 4;
+    Notify();
 }

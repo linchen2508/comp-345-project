@@ -338,7 +338,12 @@ Map& Map::operator = (const Map& object) {
 Map::~Map() {};
 //Stream Insertion Operator
 ostream& operator<<(ostream& output, const Map& object) {
-    return output << "Map:" << object.mName << "Num Territory: " << object.numOfAllTerritory << "Num Continent: " << object.numOfAllContinent << endl;
+    //return output << "Map:" << object.mName << "Num Territory: " << object.numOfAllTerritory << "Num Continent: " << object.numOfAllContinent << endl;
+    output << endl;
+    for (int i = 0; i < object.allTerritory.size(); i++) {
+        output << i + 1 <<" -- "<< *object.allTerritory[i] << endl;
+    }
+    return output;
 }
 /**********************/
 

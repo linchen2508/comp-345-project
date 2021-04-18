@@ -48,6 +48,16 @@ public:
 	int getCityToken() { return cityToken; };//For A3
 	int getActive() { return active; }; //For A3
 	int getNum() { return num; }; //For A3
+	int getChange() { return change; };//For A3
+	int getTerritoryNum(){
+		int count = 0;
+		for (int i = 0; i < getTerritory().size(); i++) {
+			if (getTerritory()[i]->getArmyNum() > getTerritory()[i]->getWhiteNum()) {
+				count++;
+			}
+		}
+		return count;
+	};
 	vector<Territory*> getTerritory();
 	vector<Cards*> getHandCard();
 	Territory* getTerritoryById(int tid);		//THROUGH tid TO GAIN OBJECT Territory  2-part4
@@ -62,10 +72,10 @@ public:
 	void setTerritory(Territory* object);
 	//A3 - Set Name
 	void setName(string name) { this->name = name; };
-
+	void setChange(int num) { this->change = num; };
 	//A3- set num
 	void setNum(int num);
-
+	
 	//Actions to deal with cards  2-part4
 	void getNowHandAction(vector<int>& actionCode, vector<string>& actionsStr);		//According to the current card action Get the code representing the action (1 or 2 two actions) )  2-part4
 	void dealWithHand(vector<Player*> allPlayer, MapLoader* mapLoader);	//Actions to deal with cards   2-part4
@@ -94,6 +104,8 @@ private:
 
 	//For A3 active observer
 	int active;
+	//For A3 statistic obeserver
+	int change;
 	int num;// player select card number
 
 };
