@@ -143,6 +143,10 @@ void GameEngine::setNonPlayerArmy() {
             Notify();
         }
     }
+     //Static Observer 
+    //End Game
+    num = 4;
+    Notify();
 }
 
 
@@ -660,6 +664,10 @@ void GameEngine::gameLoopTournament() {
             numberOfCardEachPlayer++;
         }
     }
+    //Static Observer 
+    //End Game
+    num = 4;
+    Notify();
 }
 
 void GameEngine::gameLoopForDemo4() {
