@@ -229,7 +229,7 @@ void StatisticsObserver::display() {
        int vp = _subject->getVictoryPoint(_subject->getPlayerVector()[index]);
        int c = _subject->getPlayerContinentNum(_subject->getPlayerVector()[index]);
 
-       cout << "Player " << _subject->getPlayerVector()[playerIndex]->getName() <<" Has been Destory Armies.";
+       cout << "Player " << _subject->getPlayerVector()[index]->getName() <<" Has been Destory Armies.";
        //print Victory Points
        cout << "\nVictory Points < " << vp << " > : ";
        for (int i = 0; i < vp; i++) {
