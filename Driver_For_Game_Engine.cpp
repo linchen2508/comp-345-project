@@ -32,13 +32,13 @@ int main() {
 	//tournament mode
 	if (mode == 1) {
 		gamebot->gameLoopTournament();
-		gamebot->computeScord();   
+		//gamebot->computeScord();   
     }
 
 	// 2 human player mode
 	if (mode == 2) {
 		gamebot->gameloop();
-		gamebot->computeScord();
+		//gamebot->computeScord();
 	}
 	return 0;
 }
