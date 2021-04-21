@@ -143,10 +143,6 @@ void GameEngine::setNonPlayerArmy() {
             Notify();
         }
     }
-     //Static Observer 
-    //End Game
-    num = 4;
-    Notify();
 }
 
 
